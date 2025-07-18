@@ -1,4 +1,4 @@
-// Defina aqui a URL do seu back‑end (exemplo: Render)
+// Defina aqui a URL do seu back‑end (Render)
 const API_BASE = 'https://phillaseanbackend.onrender.com';
 
 // Prefixo dos endpoints
@@ -15,13 +15,14 @@ async function apiFetch(path, opts = {}) {
   return data;
 }
 
-// Estado de autenticação
+// Atualiza a navbar conforme estado de login
 function updateNav() {
   const user = JSON.parse(localStorage.getItem('user'));
   const nav  = document.getElementById('nav-list');
   if (user) {
     nav.innerHTML = `
       <li>Olá, ${user.name}</li>
+      <li><a href="client-portal.html?userId=${user._id}">Portal do Cliente</a></li>
       <li><button id="btn-logout">Logout</button></li>
     `;
     document.getElementById('btn-logout').onclick = () => {
@@ -51,12 +52,11 @@ function openAuth(tab) {
 document.getElementById('auth-close').onclick = () => {
   document.getElementById('auth-modal').classList.add('hidden');
 };
-
-// Troca abas manualmente
+// Troca abas
 document.getElementById('tab-login').onclick    = () => openAuth('login');
 document.getElementById('tab-register').onclick = () => openAuth('register');
 
-// Formulário de login
+// Login
 document.getElementById('form-login').onsubmit = async e => {
   e.preventDefault();
   try {
@@ -75,7 +75,7 @@ document.getElementById('form-login').onsubmit = async e => {
   }
 };
 
-// Formulário de registro
+// Registro
 document.getElementById('form-register').onsubmit = async e => {
   e.preventDefault();
   try {
@@ -93,7 +93,7 @@ document.getElementById('form-register').onsubmit = async e => {
   }
 };
 
-// Solicitação via cards
+// Solicitação rápida via cards
 document.querySelectorAll('.request-btn').forEach(btn => {
   btn.onclick = async () => {
     try {
@@ -131,5 +131,5 @@ document.getElementById('order-form').onsubmit = async e => {
   }
 };
 
-// Inicializa
+// Inicialização
 updateNav();
