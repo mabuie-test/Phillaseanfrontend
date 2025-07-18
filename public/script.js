@@ -1,4 +1,8 @@
-const API = '/api';  // prefixo dos endpoints
+// Defina aqui a URL do seu back‑end (exemplo: Render)
+const API_BASE = 'https://phillaseanbackend.onrender.com/';
+
+// Prefixo dos endpoints
+const API = API_BASE + '/api';
 
 // Utilitário de fetch com JWT
 async function apiFetch(path, opts = {}) {
@@ -75,7 +79,7 @@ document.getElementById('form-login').onsubmit = async e => {
 document.getElementById('form-register').onsubmit = async e => {
   e.preventDefault();
   try {
-    const name = e.target['reg-name'].value;
+    const name  = e.target['reg-name'].value;
     const email = e.target['reg-email'].value;
     const pwd   = e.target['reg-password'].value;
     await apiFetch('/auth/register', {
@@ -96,7 +100,7 @@ document.querySelectorAll('.request-btn').forEach(btn => {
       const service = btn.dataset.service;
       const name    = prompt('Seu nome completo:');
       const email   = prompt('Seu email:');
-      if (!name||!email) throw new Error('Nome e email são obrigatórios.');
+      if (!name || !email) throw new Error('Nome e email são obrigatórios.');
       await apiFetch('/orders', {
         method:'POST',
         body: JSON.stringify({ name, email, service })
