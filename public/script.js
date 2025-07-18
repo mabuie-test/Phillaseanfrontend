@@ -1,5 +1,5 @@
 // Defina aqui a URL do seu back‑end (exemplo: Render)
-const API_BASE = 'https://phillaseanbackend.onrender.com';
+const API_BASE = 'https://https://phillaseanbackend.onrender.com';
 
 // Prefixo dos endpoints
 const API = API_BASE + '/api';
