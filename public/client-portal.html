@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portal do Cliente</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="container">
+    <h1>Portal do Cliente</h1>
+    <nav><a href="index.html">← Início</a></nav>
+  </header>
+
+  <main class="container">
+    <h2>Meus Pedidos</h2>
+    <table id="orders-table">
+      <thead>
+        <tr><th>Serviço</th><th>Data</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <!-- Linhas serão inseridas aqui -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const API_BASE = 'https://phillaseanbackend.onrender.com';
+    const API = API_BASE + '/api';
+
+    async function apiFetch(path, opts = {}) {
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type':'application/json', ...opts.headers };
+      if (token) headers.Authorization = 'Bearer ' + token;
+      const res = await fetch(API + path, { ...opts, headers });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    function getUserId() {
+      return new URLSearchParams(window.location.search).get('userId');
+    }
+
+    async function loadOrders() {
+      try {
+        const userId = getUserId();
+        if (!userId) throw new Error('Usuário não identificado.');
+        const orders = await apiFetch(`/orders?userId=${userId}`);
+        const tbody = document.querySelector('#orders-table tbody');
+        orders.forEach(o => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${o.service}</td>
+            <td>${new Date(o.createdAt).toLocaleString()}</td>
+            <td>${o.status}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert('Erro ao carregar pedidos: ' + err.message);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOrders);
+  </script>
+</body>
+</html>
