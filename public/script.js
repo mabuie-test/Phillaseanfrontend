@@ -1,5 +1,5 @@
 // Defina aqui a URL do seu back‑end (exemplo: Render)
-const API_BASE = 'https://phillaseanbackend.onrender.com/';
+const API_BASE = 'https://phillaseanbackend.onrender.com';
 
 // Prefixo dos endpoints
 const API = API_BASE + '/api';
@@ -7,9 +7,9 @@ const API = API_BASE + '/api';
 // Utilitário de fetch com JWT
 async function apiFetch(path, opts = {}) {
   const token = localStorage.getItem('token');
-  const headers = { 'Content-Type':'application/json', ...opts.headers };
+  const headers = { 'Content-Type': 'application/json', ...opts.headers };
   if (token) headers.Authorization = 'Bearer ' + token;
-  const res = await fetch(API + path, { ...opts, headers });
+  const res  = await fetch(API + path, { ...opts, headers });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || res.statusText);
   return data;
@@ -18,7 +18,7 @@ async function apiFetch(path, opts = {}) {
 // Estado de autenticação
 function updateNav() {
   const user = JSON.parse(localStorage.getItem('user'));
-  const nav = document.getElementById('nav-list');
+  const nav  = document.getElementById('nav-list');
   if (user) {
     nav.innerHTML = `
       <li>Olá, ${user.name}</li>
@@ -41,10 +41,10 @@ function updateNav() {
 // Abre modal de auth e seleciona aba
 function openAuth(tab) {
   document.getElementById('auth-modal').classList.remove('hidden');
-  document.getElementById('tab-login').classList.toggle('active', tab==='login');
-  document.getElementById('tab-register').classList.toggle('active', tab==='register');
-  document.getElementById('form-login').classList.toggle('active', tab==='login');
-  document.getElementById('form-register').classList.toggle('active', tab==='register');
+  document.getElementById('tab-login').classList.toggle('active',     tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active',  tab === 'register');
+  document.getElementById('form-login').classList.toggle('active',    tab === 'login');
+  document.getElementById('form-register').classList.toggle('active', tab === 'register');
 }
 
 // Fecha modal
@@ -60,14 +60,14 @@ document.getElementById('tab-register').onclick = () => openAuth('register');
 document.getElementById('form-login').onsubmit = async e => {
   e.preventDefault();
   try {
-    const email = e.target['login-email'].value;
+    const email = e.target['login-email'].value.trim();
     const pwd   = e.target['login-password'].value;
     const res   = await apiFetch('/auth/login', {
-      method:'POST',
-      body: JSON.stringify({ email, password: pwd })
+      method: 'POST',
+      body:   JSON.stringify({ email, password: pwd })
     });
     localStorage.setItem('token', res.token);
-    localStorage.setItem('user', JSON.stringify(res.user));
+    localStorage.setItem('user',  JSON.stringify(res.user));
     updateNav();
     document.getElementById('auth-modal').classList.add('hidden');
   } catch (err) {
@@ -79,12 +79,12 @@ document.getElementById('form-login').onsubmit = async e => {
 document.getElementById('form-register').onsubmit = async e => {
   e.preventDefault();
   try {
-    const name  = e.target['reg-name'].value;
-    const email = e.target['reg-email'].value;
+    const name  = e.target['reg-name'].value.trim();
+    const email = e.target['reg-email'].value.trim();
     const pwd   = e.target['reg-password'].value;
     await apiFetch('/auth/register', {
-      method:'POST',
-      body: JSON.stringify({ name, email, password: pwd })
+      method: 'POST',
+      body:   JSON.stringify({ name, email, password: pwd })
     });
     alert('Registro concluído! Agora faça login.');
     openAuth('login');
@@ -102,8 +102,8 @@ document.querySelectorAll('.request-btn').forEach(btn => {
       const email   = prompt('Seu email:');
       if (!name || !email) throw new Error('Nome e email são obrigatórios.');
       await apiFetch('/orders', {
-        method:'POST',
-        body: JSON.stringify({ name, email, service })
+        method: 'POST',
+        body:   JSON.stringify({ name, email, service })
       });
       alert('Pedido criado com sucesso!');
     } catch (err) {
@@ -116,13 +116,13 @@ document.querySelectorAll('.request-btn').forEach(btn => {
 document.getElementById('order-form').onsubmit = async e => {
   e.preventDefault();
   try {
-    const name    = e.target['order-name'].value;
-    const email   = e.target['order-email'].value;
+    const name    = e.target['order-name'].value.trim();
+    const email   = e.target['order-email'].value.trim();
     const service = e.target['order-service'].value;
-    const details = e.target['order-details'].value;
+    const details = e.target['order-details'].value.trim();
     await apiFetch('/orders', {
-      method:'POST',
-      body: JSON.stringify({ name, email, service, details })
+      method: 'POST',
+      body:   JSON.stringify({ name, email, service, details })
     });
     document.getElementById('order-msg').textContent = 'Solicitação enviada!';
     e.target.reset();
